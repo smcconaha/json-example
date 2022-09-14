@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+
+    <title>Our superheroes</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Faster+One" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+  </head>
+
+  <body>
+
+      <header>
+
+      </header>
+
+      <section>
+
+      </section>
+
+      <script>
+        /*We will retrieve JSON data and convert to JS object*/
+        async function populate() {
+
+        const requestURL = 'https://mdn.github.io/learning-area/javascript/oojs/json/superheroes.json'; /declare the requestURL variable to store the GitHub URL*/
+        const request = new Request(requestURL); //use the URL to initialize a new Request object
+
+        const response = await fetch(request); //make the network request using the fetch() function, and this returns a Response object
+        const superHeroes = await response.json(); //retrieve the response as JSON using the json() function of the Response object
+
+        populateHeader(superHeroes); //object passed thru this function that fills the header w/ correct data
+        populateHeroes(superHeroes); //creates an information card for each hero on the team & inserts into section
+
+        }
+
+        function populateHeader(obj) {
+        const header = document.querySelector('header');
+        const myH1 = document.createElement('h1'); //create h1 element
+        myH1.textContent = obj.squadName; //h1 textcont = squadName property of the object
+        header.appendChild(myH1); //append to header
+        //WRITING TWO FUNCTIONS MENTIONED ABOVE
+        const myPara = document.createElement('p'); //create paragraph
+        myPara.textContent = `Hometown: ${obj.homeTown} // Formed: ${obj.formed}`;//set text content, has two properties
+        header.appendChild(myPara); //append to header
+        }
+        //NOW CREATE & DISPLAY SUPERHERO CARDS
+        function populateHeroes(obj) {
+        const section = document.querySelector('section');
+        const heroes = obj.members; //store members property of JS object in new var
+
+        for (const hero of heroes) { //looping thru each object in array
+            const myArticle = document.createElement('article');
+            const myH2 = document.createElement('h2');
+            const myPara1 = document.createElement('p');
+            const myPara2 = document.createElement('p');
+            const myPara3 = document.createElement('p');
+            const myList = document.createElement('ul');
+
+            myH2.textContent = hero.name; //set h2 to = hero name
+            myPara1.textContent = `Secret identity: ${hero.secretIdentity}`;
+            myPara2.textContent = `Age: ${hero.age}`;
+            myPara3.textContent = 'Superpowers:';
+
+            const superPowers = hero.powers;
+            for (const power of superPowers) { //looping thru curret superpowers
+            const listItem = document.createElement('li'); //create li put superpowers inside
+            listItem.textContent = power;
+            myList.appendChild(listItem);//placing li inside ul
+            }
+
+            myArticle.appendChild(myH2); //ORDER MATTERS, this is how they will display in HTML
+            myArticle.appendChild(myPara1);
+            myArticle.appendChild(myPara2);
+            myArticle.appendChild(myPara3);
+            myArticle.appendChild(myList);
+
+            section.appendChild(myArticle);
+        }
+        }
+        populate(); //finally call to top-level function
+      </script>
+  </body>
+</html>
